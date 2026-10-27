@@ -32,6 +32,6 @@ jobs:
         npm i
         npm run build
 
-    - name: Deploy Amazon S3
+    - name: Deploy to Amazon S3
       run: |
         aws s3 sync ./dist s3://nvharish-portfolio --delete
