@@ -34,4 +34,4 @@ jobs:
 
     - name: Deploy Amazon S3
       run: |
-        aws s3 sync ./dist s3://arn:aws:s3:::nvharish-portfolio --delete
+        aws s3 sync ./dist s3://nvharish-portfolio --delete
