@@ -1,0 +1,37 @@
+# This workflow will build and deploy files to Amazon S3 bucket.
+
+name: Deploy to Amazon S3
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  id-token: write   # Required for requesting the AWS JWT via OIDC
+  contents: read    # Required for actions/checkout
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Build
+      id: build
+      run: |
+        npm i
+        npm run build
+
+    - name: Deploy Amazon S3
+      run: |
+        aws s3 sync ./dist s3://${{ secrets.AWS_S3_BUCKET }} --delete
